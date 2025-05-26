@@ -203,7 +203,7 @@ export default function ProfessionalTemplate({ profile }) {
 </h2>
 
 {displayProfile?.profile?.passionateText && (
-  <p className="text-xl font-medium mb-4 text-center text-gray-700 max-w-3xl mx-auto">
+  <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
     {displayProfile.profile.passionateText}
   </p>
 )}
