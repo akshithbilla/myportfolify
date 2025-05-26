@@ -109,31 +109,31 @@ export default function Guest() {
   <div className="max-w-4xl mx-auto text-center">
     <h2 className={subtitle({ class: "mb-2" })}>Our Templates</h2>
     <p className={title({ size: "sm" })}>
-        Designs tailored for your profession
+       Designs tailored for your profession
     </p>
   </div>
   <br />
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 max-w-6xl mx-auto">
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 max-w-4xl mx-auto">
     {templates.map((template) => (
-      <Card key={template.id} isPressable className="h-full">
-        <CardBody className="p-0">
+      <Card key={template.id} isPressable className="h-full transition-transform hover:scale-[1.02]">
+        <CardBody className="p-0 overflow-hidden">
           <Image
             alt={template.name}
-            className="object-cover"
-            height={240}
+            className="object-cover w-full h-[160px]"
             src={template.image}
-            width="100%"
+            width={400}
+            height={160}
           />
           {!template.enabled && (
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <span className="text-white font-bold text-lg">Coming Soon</span>
+              <span className="text-white font-bold text-sm">Coming Soon</span>
             </div>
           )}
         </CardBody>
-        <CardFooter className="flex-col items-start">
-          <h3 className="text-lg font-bold">{template.name}</h3>
-          <p className="text-default-500">{template.description}</p>
-          <p className="text-small text-default-400 mt-2">
+        <CardFooter className="flex-col items-start p-4">
+          <h3 className="text-md font-bold">{template.name}</h3>
+          <p className="text-default-500 text-sm">{template.description}</p>
+          <p className="text-xs text-default-400 mt-1">
             {template.enabled ? "Available Now" : "Coming Soon"}
           </p>
         </CardFooter>
