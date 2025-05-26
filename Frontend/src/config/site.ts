@@ -1,0 +1,80 @@
+import {
+  HomeIcon,
+  ArrowUpTrayIcon ,
+  CurrencyDollarIcon ,
+  ServerIcon,
+} from "@heroicons/react/24/outline";
+
+export type SiteConfig = typeof siteConfig;
+
+export const siteConfig = {
+  name: "Vite + HeroUI",
+  description: "Make beautiful websites regardless of your design experience.",
+  navItems: [
+    {
+      label: "Dashboard",
+      href: "/",
+      icon: HomeIcon,
+    },
+    {
+      label: " My Vault",
+      href: "/myvault",
+      icon: ServerIcon,
+    },
+    {
+      label: "Encrypt",
+      href: "/Encrypt",
+      icon: ArrowUpTrayIcon ,
+    },
+    {
+      label: "Pricing",
+      href: "/pricing",
+      icon: CurrencyDollarIcon  ,
+    },
+    {/*
+      label: "About",
+      href: "/about",
+    */}
+  ],
+  navMenuItems: [
+    {
+      label: "Profile",
+      href: "/profile",
+    },
+    {
+      label: "Dashboard",
+      href: "/dashboard",
+    },
+    {
+      label: "My Data",
+      href: "/docs",
+    },
+    {
+      label: "Upload",
+      href: "/blog",
+    },
+    {
+      label: "Pricing",
+      href: "/pricing",
+    },
+    {
+      label: "Settings",
+      href: "/settings",
+    },
+    {
+      label: "Help & Feedback",
+      href: "/help-feedback",
+    },
+    {
+      label: "Logout",
+      href: "/logout",
+    },
+  ],
+  links: {
+    github: "https://github.com/frontio-ai/heroui",
+    twitter: "https://twitter.com/hero_ui",
+    docs: "https://heroui.com",
+    discord: "https://discord.gg/9b6yyZKmH4",
+    sponsor: "https://patreon.com/jrgarciadev",
+  },
+};

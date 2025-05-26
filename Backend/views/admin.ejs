@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildBard Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: #2c3e50;
+            color: white;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: white;
+            background: #34495e;
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+        .stat-card {
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .action-dropdown {
+            min-width: 200px;
+        }
+        .table-responsive {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0">
+                <div class="p-3">
+                    <h4 class="text-center mb-4">BuildBard Admin</h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#users" data-bs-toggle="tab">
+                                <i class="bi bi-people-fill"></i> Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#profiles" data-bs-toggle="tab">
+                                <i class="bi bi-person-badge"></i> Profiles
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#system" data-bs-toggle="tab">
+                                <i class="bi bi-gear-fill"></i> System
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 ms-sm-auto px-md-4 py-4">
+                <div class="tab-content">
+                    <!-- Dashboard Tab -->
+                    <div class="tab-pane fade show active" id="dashboard">
+                        <h2 class="mb-4">Admin Dashboard</h2>
+                        
+                        <!-- Stats Cards -->
+                        <div class="row mb-4">
+                            <div class="col-md-3 mb-3">
+                                <div class="card stat-card bg-primary text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Users</h5>
+                                        <h2 class="card-text" id="totalUsers">0</h2>
+                                        <i class="bi bi-people-fill float-end fs-1 opacity-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card stat-card bg-success text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Verified Users</h5>
+                                        <h2 class="card-text" id="verifiedUsers">0</h2>
+                                        <i class="bi bi-check-circle-fill float-end fs-1 opacity-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card stat-card bg-info text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Active Profiles</h5>
+                                        <h2 class="card-text" id="usersWithProfiles">0</h2>
+                                        <i class="bi bi-person-badge float-end fs-1 opacity-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card stat-card bg-warning text-dark">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Projects</h5>
+                                        <h2 class="card-text" id="totalProjects">0</h2>
+                                        <i class="bi bi-collection-fill float-end fs-1 opacity-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Recent Activity</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="recentActivity">
+                                        <thead>
+                                            <tr>
+                                                <th>Time</th>
+                                                <th>User</th>
+                                                <th>Action</th>
+                                                <th>Details</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Admin Info -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Admin Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Logged in as:</strong> <span id="adminEmail"><%= user.email %></span></p>
+                                        <p><strong>Last Login:</strong> <span id="lastLogin">Loading...</span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Admin Privileges:</strong> Full Access</p>
+                                        <p><strong>Session Expires:</strong> <span id="sessionExpires">Loading...</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Users Tab -->
+                    <div class="tab-pane fade" id="users">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>User Management</h2>
+                            <div>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                                    <i class="bi bi-plus-lg"></i> Create User
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- User Search and Filters -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="userSearch" class="form-label">Search Users</label>
+                                        <input type="text" class="form-control" id="userSearch" placeholder="Email, username...">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="userStatusFilter" class="form-label">Status</label>
+                                        <select class="form-select" id="userStatusFilter">
+                                            <option value="all">All Users</option>
+                                            <option value="verified">Verified Only</option>
+                                            <option value="unverified">Unverified Only</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="userSort" class="form-label">Sort By</label>
+                                        <select class="form-select" id="userSort">
+                                            <option value="newest">Newest First</option>
+                                            <option value="oldest">Oldest First</option>
+                                            <option value="email">Email A-Z</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Users Table -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="usersTable">
+                                        <thead>
+                                            <tr>
+                                                <th>User</th>
+                                                <th>Email</th>
+                                                <th>Status</th>
+                                                <th>Profile</th>
+                                                <th>Projects</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profiles Tab -->
+                    <div class="tab-pane fade" id="profiles">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Profile Management</h2>
+                            <div>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProfileModal">
+                                    <i class="bi bi-plus-lg"></i> Create Profile
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Profile Search and Filters -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="profileSearch" class="form-label">Search Profiles</label>
+                                        <input type="text" class="form-control" id="profileSearch" placeholder="Username, name...">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="profileSort" class="form-label">Sort By</label>
+                                        <select class="form-select" id="profileSort">
+                                            <option value="newest">Newest First</option>
+                                            <option value="oldest">Oldest First</option>
+                                            <option value="username">Username A-Z</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="profileTemplateFilter" class="form-label">Template</label>
+                                        <select class="form-select" id="profileTemplateFilter">
+                                            <option value="all">All Templates</option>
+                                            <option value="default">Default</option>
+                                            <option value="minimal">Minimal</option>
+                                            <option value="professional">Professional</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Profiles Table -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="profilesTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Owner</th>
+                                                <th>Template</th>
+                                                <th>Projects</th>
+                                                <th>Featured</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Tab -->
+                    <div class="tab-pane fade" id="system">
+                        <h2 class="mb-4">System Configuration</h2>
+                        
+                        <!-- System Info -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>System Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Node Version:</strong> <span id="nodeVersion">Loading...</span></p>
+                                        <p><strong>Platform:</strong> <span id="platform">Loading...</span></p>
+                                        <p><strong>Uptime:</strong> <span id="uptime">Loading...</span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Memory Usage:</strong> <span id="memoryUsage">Loading...</span></p>
+                                        <p><strong>Database:</strong> <span id="databaseStats">Loading...</span></p>
+                                        <p><strong>Environment:</strong> <span id="environment"><%= process.env.NODE_ENV || 'development' %></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Admin Configuration -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Admin Configuration</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Admin Emails (comma separated)</label>
+                                    <textarea class="form-control" id="adminEmails" rows="3"><%= process.env.ADMIN_EMAILS %></textarea>
+                                    <small class="text-muted">Changes require server restart</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Maintenance Mode -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Maintenance Mode</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="maintenanceToggle">
+                                    <label class="form-check-label" for="maintenanceToggle">Enable Maintenance Mode</label>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="maintenanceMessage" class="form-label">Maintenance Message</label>
+                                    <textarea class="form-control" id="maintenanceMessage" rows="3" placeholder="We'll be back soon..."></textarea>
+                                </div>
+                                <button id="saveMaintenance" class="btn btn-primary">Save Settings</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create User Modal -->
+    <div class="modal fade" id="createUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createUserForm">
+                        <div class="mb-3">
+                            <label for="newUserEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="newUserEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newUserPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="newUserPassword" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="newUserVerified">
+                            <label class="form-check-label" for="newUserVerified">Email Verified</label>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="newUserAdmin">
+                            <label class="form-check-label" for="newUserAdmin">Make Admin</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="createUserSubmit">Create User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Actions Modal -->
+    <div class="modal fade" id="userActionsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userActionsModalTitle">User Actions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="userActionsTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#userDetailsTab">Details</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#resetPasswordTab">Reset Password</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#dangerZoneTab">Danger Zone</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content py-3">
+                        <div class="tab-pane fade show active" id="userDetailsTab">
+                            <div id="userDetailsContent">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="resetPasswordTab">
+                            <form id="resetPasswordForm">
+                                <div class="mb-3">
+                                    <label for="newPassword" class="form-label">New Password</label>
+                                    <input type="password" class="form-control" id="newPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update Password</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="dangerZoneTab">
+                            <div class="alert alert-danger">
+                                <h5>Danger Zone</h5>
+                                <p>These actions are irreversible. Proceed with caution.</p>
+                                <button class="btn btn-outline-danger me-2" id="deleteUserBtn">Delete User</button>
+                                <button class="btn btn-outline-warning" id="impersonateUserBtn">Impersonate User</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Actions Modal -->
+    <div class="modal fade" id="profileActionsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profileActionsModalTitle">Profile Actions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="profileActionsTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#profileOverviewTab">Overview</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#profileProjectsTab">Projects</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#profileEditTab">Edit</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content py-3">
+                        <div class="tab-pane fade show active" id="profileOverviewTab">
+                            <div id="profileOverviewContent">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="profileProjectsTab">
+                            <div id="profileProjectsContent">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="profileEditTab">
+                            <form id="editProfileForm">
+                                <div id="profileEditContent">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Global variables
+        let currentAdminData = {};
+        let allUsers = [];
+        let allProfiles = [];
+
+        // DOM Ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize tabs
+            const tabElms = document.querySelectorAll('a[data-bs-toggle="tab"]');
+            tabElms.forEach(tabEl => {
+                tabEl.addEventListener('shown.bs.tab', function(event) {
+                    if (event.target.getAttribute('href') === '#users') {
+                        loadUsers();
+                    } else if (event.target.getAttribute('href') === '#profiles') {
+                        loadProfiles();
+                    } else if (event.target.getAttribute('href') === '#system') {
+                        loadSystemInfo();
+                    }
+                });
+            });
+
+            // Load initial data
+            loadAdminData();
+            setupEventListeners();
+        });
+
+        // Load admin dashboard data
+        function loadAdminData() {
+            fetch('/admin')
+                .then(response => response.json())
+                .then(data => {
+                    currentAdminData = data;
+                    updateDashboard(data);
+                })
+                .catch(error => {
+                    console.error('Error loading admin data:', error);
+                    alert('Failed to load admin data');
+                });
+        }
+
+        // Update dashboard with data
+        function updateDashboard(data) {
+            // Update stats
+            document.getElementById('totalUsers').textContent = data.stats.totalUsers;
+            document.getElementById('verifiedUsers').textContent = data.stats.verifiedUsers;
+            document.getElementById('usersWithProfiles').textContent = data.stats.usersWithProfiles;
+            document.getElementById('totalProjects').textContent = data.stats.totalProjects;
+
+            // Update admin info
+            document.getElementById('lastLogin').textContent = 
+                new Date(data.currentAdmin.lastLogin).toLocaleString();
+            document.getElementById('sessionExpires').textContent = 
+                new Date(Date.now() + 24 * 60 * 60 * 1000).toLocaleString(); // Simplified
+
+            // Populate users table if on users tab
+            if (document.querySelector('#users.show')) {
+                loadUsers();
+            }
+
+            // Populate recent activity
+            updateRecentActivity(data.users);
+        }
+
+        // Load users data
+        function loadUsers() {
+            fetch('/admin')
+                .then(response => response.json())
+                .then(data => {
+                    allUsers = data.users;
+                    renderUsersTable(data.users);
+                })
+                .catch(error => {
+                    console.error('Error loading users:', error);
+                    alert('Failed to load users');
+                });
+        }
+
+        // Render users table
+        function renderUsersTable(users) {
+            const tbody = document.querySelector('#usersTable tbody');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="user-avatar me-2">${user.email.charAt(0).toUpperCase()}</div>
+                            <div>${user.email.split('@')[0]}</div>
+                        </div>
+                    </td>
+                    <td>${user.email}</td>
+                    <td>
+                        <span class="badge ${user.isVerified ? 'bg-success' : 'bg-warning text-dark'}">
+                            ${user.isVerified ? 'Verified' : 'Unverified'}
+                        </span>
+                    </td>
+                    <td>
+                        ${user.hasProfile ? 
+                            `<span class="badge bg-info">${user.username}</span>` : 
+                            '<span class="badge bg-secondary">None</span>'}
+                    </td>
+                    <td>${user.projectCount}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" 
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu action-dropdown">
+                                <li><a class="dropdown-item" href="#" data-user-id="${user._id}" data-action="view">View Details</a></li>
+                                <li><a class="dropdown-item" href="#" data-user-id="${user._id}" data-action="verify">${user.isVerified ? 'Unverify' : 'Verify'}</a></li>
+                                <li><a class="dropdown-item" href="#" data-user-id="${user._id}" data-action="reset-password">Reset Password</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" data-user-id="${user._id}" data-action="delete">Delete User</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Add event listeners to action buttons
+            document.querySelectorAll('[data-action]').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const userId = this.getAttribute('data-user-id');
+                    const action = this.getAttribute('data-action');
+                    handleUserAction(userId, action);
+                });
+            });
+        }
+
+        // Handle user actions
+        function handleUserAction(userId, action) {
+            const user = allUsers.find(u => u._id === userId);
+            
+            switch(action) {
+                case 'view':
+                    showUserDetailsModal(user);
+                    break;
+                case 'verify':
+                    toggleUserVerification(userId, !user.isVerified);
+                    break;
+                case 'reset-password':
+                    showUserDetailsModal(user, 'resetPasswordTab');
+                    break;
+                case 'delete':
+                    if (confirm(`Are you sure you want to delete ${user.email}? This cannot be undone.`)) {
+                        deleteUser(userId);
+                    }
+                    break;
+            }
+        }
+
+        // Show user details modal
+        function showUserDetailsModal(user, activeTab = 'userDetailsTab') {
+            document.getElementById('userActionsModalTitle').textContent = `Manage User: ${user.email}`;
+            
+            // Set details tab content
+            document.getElementById('userDetailsContent').innerHTML = `
+                <div class="mb-3">
+                    <strong>Email:</strong> ${user.email}
+                </div>
+                <div class="mb-3">
+                    <strong>Status:</strong> 
+                    <span class="badge ${user.isVerified ? 'bg-success' : 'bg-warning text-dark'}">
+                        ${user.isVerified ? 'Verified' : 'Unverified'}
+                    </span>
+                </div>
+                <div class="mb-3">
+                    <strong>Profile:</strong> 
+                    ${user.hasProfile ? 
+                        `<a href="/api/profiles/${user.username}" target="_blank">${user.username}</a>` : 
+                        'No profile'}
+                </div>
+                <div class="mb-3">
+                    <strong>Projects:</strong> ${user.projectCount}
+                </div>
+                <div class="mb-3">
+                    <strong>Created:</strong> ${new Date(user.createdAt).toLocaleDateString()}
+                </div>
+                <div class="mb-3">
+                    <strong>Last Login:</strong> ${user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Never'}
+                </div>
+            `;
+
+            // Set user ID on forms
+            document.getElementById('resetPasswordForm').setAttribute('data-user-id', user._id);
+            document.getElementById('deleteUserBtn').setAttribute('data-user-id', user._id);
+            document.getElementById('impersonateUserBtn').setAttribute('data-user-id', user._id);
+
+            // Activate the requested tab
+            const tab = new bootstrap.Tab(document.querySelector(`#userActionsTabs a[href="#${activeTab}"]`));
+            tab.show();
+
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('userActionsModal'));
+            modal.show();
+        }
+
+        // Toggle user verification
+        function toggleUserVerification(userId, verify) {
+            fetch(`/admin/users/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'verify',
+                    data: { verify }
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                loadUsers();
+                loadAdminData();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to update user verification');
+            });
+        }
+
+        // Delete user
+        function deleteUser(userId) {
+            fetch(`/admin/users/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'delete'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                loadUsers();
+                loadAdminData();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to delete user');
+            });
+        }
+
+        // Load profiles data
+        function loadProfiles() {
+            fetch('/admin/profiles')
+                .then(response => response.json())
+                .then(data => {
+                    allProfiles = data;
+                    renderProfilesTable(data);
+                })
+                .catch(error => {
+                    console.error('Error loading profiles:', error);
+                    alert('Failed to load profiles');
+                });
+        }
+
+        // Render profiles table
+        function renderProfilesTable(profiles) {
+            const tbody = document.querySelector('#profilesTable tbody');
+            tbody.innerHTML = '';
+
+            profiles.forEach(profile => {
+                const featuredCount = profile.projects.filter(p => p.featured).length;
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${profile.username}</td>
+                    <td>${profile.userId?.email || 'Unknown'}</td>
+                    <td>
+                        <span class="badge bg-secondary">${profile.template || 'default'}</span>
+                    </td>
+                    <td>${profile.projects.length}</td>
+                    <td>${featuredCount}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" 
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu action-dropdown">
+                                <li><a class="dropdown-item" href="/api/profiles/${profile.username}" target="_blank">View Public</a></li>
+                                <li><a class="dropdown-item" href="#" data-profile-id="${profile._id}" data-action="view">Manage Profile</a></li>
+                                <li><a class="dropdown-item" href="#" data-profile-id="${profile._id}" data-action="transfer">Transfer Ownership</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" data-profile-id="${profile._id}" data-action="delete">Delete Profile</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Add event listeners to action buttons
+            document.querySelectorAll('[data-action]').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const profileId = this.getAttribute('data-profile-id');
+                    const action = this.getAttribute('data-action');
+                    handleProfileAction(profileId, action);
+                });
+            });
+        }
+
+        // Handle profile actions
+        function handleProfileAction(profileId, action) {
+            const profile = allProfiles.find(p => p._id === profileId);
+            
+            switch(action) {
+                case 'view':
+                    showProfileActionsModal(profile);
+                    break;
+                case 'transfer':
+                    transferProfileOwnership(profile);
+                    break;
+                case 'delete':
+                    if (confirm(`Are you sure you want to delete profile ${profile.username}? This cannot be undone.`)) {
+                        deleteProfile(profileId);
+                    }
+                    break;
+            }
+        }
+
+        // Show profile actions modal
+        function showProfileActionsModal(profile, activeTab = 'profileOverviewTab') {
+            document.getElementById('profileActionsModalTitle').textContent = `Manage Profile: ${profile.username}`;
+            
+            // Set overview tab content
+            document.getElementById('profileOverviewContent').innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Profile Info</h5>
+                        <p><strong>Username:</strong> ${profile.username}</p>
+                        <p><strong>Owner:</strong> ${profile.userId?.email || 'Unknown'}</p>
+                        <p><strong>Template:</strong> ${profile.template || 'default'}</p>
+                        <p><strong>Created:</strong> ${new Date(profile.createdAt).toLocaleDateString()}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Statistics</h5>
+                        <p><strong>Projects:</strong> ${profile.projects.length}</p>
+                        <p><strong>Featured Projects:</strong> ${profile.projects.filter(p => p.featured).length}</p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <h5>Profile Preview</h5>
+                    <iframe src="/api/profiles/${profile.username}" style="width:100%; height:300px; border:1px solid #ddd;"></iframe>
+                </div>
+            `;
+
+            // Set projects tab content
+            const projectsHtml = profile.projects.map(project => `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5>${project.title}</h5>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input feature-toggle" type="checkbox" 
+                                    data-project-id="${project._id}" ${project.featured ? 'checked' : ''}>
+                                <label class="form-check-label">Featured</label>
+                            </div>
+                        </div>
+                        <p class="text-muted">${project.category} • ${new Date(project.createdAt).toLocaleDateString()}</p>
+                        <p>${project.description}</p>
+                        <div>
+                            ${project.techStack.map(tech => `<span class="badge bg-light text-dark me-1">${tech}</span>`).join('')}
+                        </div>
+                        <div class="mt-2">
+                            ${project.liveUrl ? `<a href="${project.liveUrl}" target="_blank" class="btn btn-sm btn-outline-primary me-1">Live Demo</a>` : ''}
+                            ${project.githubUrl ? `<a href="${project.githubUrl}" target="_blank" class="btn btn-sm btn-outline-dark">GitHub</a>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('') || '<p>No projects yet</p>';
+            
+            document.getElementById('profileProjectsContent').innerHTML = projectsHtml;
+
+            // Set edit tab content (simplified for example)
+            document.getElementById('profileEditContent').innerHTML = `
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username" value="${profile.username}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Template</label>
+                    <select class="form-select" name="template">
+                        <option value="default" ${profile.template === 'default' ? 'selected' : ''}>Default</option>
+                        <option value="minimal" ${profile.template === 'minimal' ? 'selected' : ''}>Minimal</option>
+                        <option value="professional" ${profile.template === 'professional' ? 'selected' : ''}>Professional</option>
+                    </select>
+                </div>
+                <input type="hidden" name="profileId" value="${profile._id}">
+            `;
+
+            // Activate the requested tab
+            const tab = new bootstrap.Tab(document.querySelector(`#profileActionsTabs a[href="#${activeTab}"]`));
+            tab.show();
+
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('profileActionsModal'));
+            modal.show();
+        }
+
+        // Transfer profile ownership
+        function transferProfileOwnership(profile) {
+            const newOwnerEmail = prompt('Enter the new owner\'s email:');
+            if (!newOwnerEmail) return;
+
+            // In a real app, you would look up the user by email first
+            if (confirm(`Transfer profile ${profile.username} to ${newOwnerEmail}?`)) {
+                fetch(`/admin/profiles/${profile._id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'transfer-ownership',
+                        data: { newUserId: 'NEW_USER_ID' } // You'd get this from a user lookup
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    loadProfiles();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to transfer profile');
+                });
+            }
+        }
+
+        // Delete profile
+        function deleteProfile(profileId) {
+            fetch(`/admin/profiles/${profileId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'delete'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                loadProfiles();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to delete profile');
+            });
+        }
+
+        // Load system info
+        function loadSystemInfo() {
+            fetch('/admin/system')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('nodeVersion').textContent = data.nodeVersion;
+                    document.getElementById('platform').textContent = data.platform;
+                    document.getElementById('uptime').textContent = `${Math.floor(data.uptime / 60)} minutes`;
+                    document.getElementById('memoryUsage').textContent = 
+                        `${Math.round(data.memoryUsage.heapUsed / 1024 / 1024)}MB / ${Math.round(data.memoryUsage.heapTotal / 1024 / 1024)}MB`;
+                    document.getElementById('databaseStats').textContent = 
+                        `${data.databaseStats.collections} collections, ${data.databaseStats.objects} objects`;
+                })
+                .catch(error => {
+                    console.error('Error loading system info:', error);
+                });
+        }
+
+        // Update recent activity
+        function updateRecentActivity(users) {
+            const tbody = document.querySelector('#recentActivity tbody');
+            tbody.innerHTML = '';
+
+            // Sort users by last login (newest first)
+            const sortedUsers = [...users].sort((a, b) => {
+                const dateA = a.lastLogin ? new Date(a.lastLogin) : new Date(0);
+                const dateB = b.lastLogin ? new Date(b.lastLogin) : new Date(0);
+                return dateB - dateA;
+            });
+
+            // Show top 10 most recent activities
+            sortedUsers.slice(0, 10).forEach(user => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${user.lastLogin ? new Date(user.lastLogin).toLocaleTimeString() : 'Never'}</td>
+                    <td>${user.email}</td>
+                    <td>${user.lastLogin ? 'Login' : 'Never logged in'}</td>
+                    <td>${user.hasProfile ? `Profile: ${user.username}` : 'No profile'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Setup event listeners
+        // Setup event listeners
+function setupEventListeners() {
+    // User search
+    document.getElementById('userSearch').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const filteredUsers = allUsers.filter(user => 
+            user.email.toLowerCase().includes(searchTerm) || 
+            (user.username && user.username.toLowerCase().includes(searchTerm))
+        ); // ← this closing parenthesis was missing
+        renderUsersTable(filteredUsers);
+    });
+}
+
+            // Profile search
+            document.getElementById('profileSearch').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const filteredProfiles = allProfiles.filter(profile => 
+                    profile.username.toLowerCase().includes(searchTerm) || 
+                    (profile.profile.name && profile.profile.name.toLowerCase().includes(searchTerm)))
+                renderProfilesTable(filteredProfiles);
+            });
+
+            // Reset password form
+            document.getElementById('resetPasswordForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const userId = this.getAttribute('data-user-id');
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (newPassword !== confirmPassword) {
+                    alert('Passwords do not match');
+                    return;
+                }
+
+                fetch(`/admin/users/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'reset-password',
+                        data: { newPassword }
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('userActionsModal'));
+                    modal.hide();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to reset password');
+                });
+            });
+
+            // Create user form
+            document.getElementById('createUserSubmit').addEventListener('click', function() {
+                const email = document.getElementById('newUserEmail').value;
+                const password = document.getElementById('newUserPassword').value;
+                const verified = document.getElementById('newUserVerified').checked;
+                const makeAdmin = document.getElementById('newUserAdmin').checked;
+
+                fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: email,
+                        password: password
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'User already exists') {
+                        alert('User already exists');
+                        return;
+                    }
+
+                    // If verification is checked, verify the user
+                    if (verified) {
+                        return fetch(`/admin/users/${data.user._id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                action: 'verify',
+                                data: { verify: true }
+                            })
+                        });
+                    }
+                    return data;
+                })
+                .then(response => {
+                    if (response && response.json) return response.json();
+                    return response;
+                })
+                .then(data => {
+                    alert('User created successfully');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('createUserModal'));
+                    modal.hide();
+                    loadUsers();
+                    loadAdminData();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to create user');
+                });
+            });
+
+            // Maintenance mode toggle
+            document.getElementById('saveMaintenance').addEventListener('click', function() {
+                const maintenanceMode = document.getElementById('maintenanceToggle').checked;
+                const message = document.getElementById('maintenanceMessage').value;
+
+                fetch('/admin/system/maintenance', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mode: maintenanceMode ? 'enable' : 'disable',
+                        message
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to update maintenance mode');
+                });
+            });
+
+            // Impersonate user
+            document.getElementById('impersonateUserBtn').addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                
+                if (confirm('Are you sure you want to impersonate this user? You will be logged in as them.')) {
+                    fetch(`/admin/users/${userId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'impersonate'
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        window.location.href = '/'; // Refresh as the new user
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Impersonation failed. Only allowed in development mode.');
+                    });
+                }
+            });
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+# Backend .gitignore
+
+# Node modules and builds
+node_modules/
+dist/
+coverage/
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# IDE/editor settings
+.vscode/
+.idea/
