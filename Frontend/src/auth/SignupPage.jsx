@@ -243,7 +243,7 @@ const SignupPage = () => {
           <ModalBody>
             <p>
               We've sent a verification link to your email address. Please
-              check your inbox and verify to continue.
+              check your spam or inbox and verify to continue.
             </p>
             {resentMsg && (
               <p className="text-sm text-center text-green-500 pb-2">{resentMsg}</p>
