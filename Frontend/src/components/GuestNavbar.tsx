@@ -37,14 +37,15 @@ export const GuestNavbar = () => {
             href="/"
           >
             
-            <div className={subtitle({ class: "mt-4 flex items-center gap-2" })}>
+           <div className={subtitle({ class: "mt-4 flex items-center gap-2" })}>
   <img
     src={myportfolify}
-    alt="VaultX Logo"
-    style={{ width: "24px", height: "24px" }}
+    alt="myportfolify Logo"
+    style={{ width: "24px", height: "24px", borderRadius: "50%" }}
   />
   myportfolify
 </div>
+
 
           </Link>
         </NavbarBrand>

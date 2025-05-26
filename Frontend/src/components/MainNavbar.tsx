@@ -2,6 +2,7 @@ import { Button } from "@heroui/button";
 //import { Kbd } from "@heroui/kbd";
 import { Link } from "@heroui/link";
 //import { Input } from "@heroui/input";
+import {  subtitle } from "@/components/primitives";
 import {
   Navbar as HeroUINavbar,
   NavbarBrand,
@@ -46,13 +47,13 @@ const handleLogout = () => {
             href="/"
           >
             <div className="flex items-center space-x-2">
- <div className="flex items-center space-x-2">
+   <div className={subtitle({ class: "mt-4 flex items-center gap-2" })}>
   <img
     src={myportfolify}
-    alt="Browser Not Supported"
-    className="w-6 h-6"
+    alt="myportfolify Logo"
+    style={{ width: "24px", height: "24px", borderRadius: "50%" }}
   />
-  <p className="font-semibold text-lg text-purple-700">myportfolify</p>
+  myportfolify
 </div>
 
 </div>
