@@ -17,7 +17,7 @@ import PublicOnlyRoute from './components/Layout/PublicOnlyRoute';
 
 function App() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -82,14 +82,21 @@ function App() {
       if (isAuth && location.pathname === '/') {
         navigate('/dashboard');
       }
-      setLoading(false);
+      setIsLoading(false);
     };
     init();
     // eslint-disable-next-line
   }, [navigate, location.pathname]);
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (

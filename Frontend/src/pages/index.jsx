@@ -449,7 +449,7 @@ export default function IndexPage() {
               ) : siteGenerated ? (
                 <>
                   <ArrowTopRightOnSquareIcon className="h-5 w-5 mr-2" />
-                  View My Site
+                  View My Portflio
                 </>
               ) : (
                 <>
