@@ -323,9 +323,10 @@ export default function IndexPage() {
                 <div className="mt-2 flex items-center text-sm text-gray-600">
                   <LinkIcon className="h-4 w-4 mr-1" />
                   <span>Your site will be: </span>
-                  <span className="ml-1 font-medium text-blue-600">
-                    {window.location.origin}/{usernameInput}
-                  </span>
+                 <span className="ml-1 font-medium text-blue-600">
+  myportfolify.vercel.app/{usernameInput}
+</span>
+
                 </div>
               )}
             </div>
