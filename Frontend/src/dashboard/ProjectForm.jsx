@@ -134,16 +134,17 @@ export default function ProjectForm({ onAddProject  }) {
             onChange={handleChange}
             className="w-full p-2 border rounded"
           >
-            <option value="fullstack">Full Stack Development</option>
-            <option value="mern">MERN STACK</option>
-            <option value="frontend">Frontend Development</option>
-            <option value="backend">Backend Development</option>
-            <option value="andriod">Andriod Mobile App</option>
-             <option value="ios">IOS Mobile App</option>
-             <option value="crossplatform">ReactNative/Flutter</option>
-            <option value="design">UI/UX Design</option>
-            <option value="programming">Programming</option>
-            <option value="other">Other</option>
+            <option value="Full Stack">Full Stack Development</option>
+            <option value="MERN STACK">MERN STACK</option>
+             <option value="React App">React </option>
+            <option value="Frontend">Frontend Development</option>
+            <option value="Backend">Backend Development</option>
+            <option value="Andriod App">Andriod Mobile App</option>
+             <option value="IOS App">IOS Mobile App</option>
+             <option value="ReactNative/Flutter">ReactNative/Flutter</option>
+            <option value="UI/UX Design">UI/UX Design</option>
+            <option value="Programming">Programming</option>
+            <option value="Other">Other</option>
           </select>
         </div>
 
