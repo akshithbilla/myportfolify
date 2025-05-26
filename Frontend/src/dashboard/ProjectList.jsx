@@ -148,7 +148,8 @@ export default function ProjectList({ projects, onProjectUpdated, onProjectDelet
                     defaultValue={editingProject.category}
                     className="w-full p-2 border rounded"
                   >
-                     <option value="fullstack">Full Stack Development</option>
+            <option value="fullstack">Full Stack Development</option>
+            <option value="mern">MERN STACK</option>
             <option value="frontend">Frontend Development</option>
             <option value="backend">Backend Development</option>
             <option value="andriod">Andriod Mobile App</option>
