@@ -5,6 +5,29 @@ import DefaultLayout from "@/layouts/default";
 import { Card, CardHeader, CardBody, CardFooter } from "@heroui/card";
 import { Image } from "@heroui/image";
 
+const templates = [
+  {
+    id: 'default',
+    name: 'Default',
+    description: 'Clean card-based layout with project filtering',
+    image: 'https://cdn.dribbble.com/userupload/31670851/file/original-beaa8e9898aae5b41a8f498bb16e919c.png?resize=1200x799&vertical=center',
+    enabled: true
+  },
+  {
+    id: 'minimal',
+    name: 'Minimal',
+    description: 'Simple single-column layout focused on content',
+    image: 'https://cdn.dribbble.com/userupload/42342196/file/original-e6d784ce9be3970d08187be9a1a845af.png?resize=1200x900&vertical=center',
+    enabled: false
+  },
+  {
+    id: 'professional',
+    name: 'Professional',
+    description: 'Modern layout with project showcases and detailed views',
+    image: 'https://cdn.dribbble.com/userupload/24856091/file/original-7029f79343f21d6f55d9628cc0a840c5.jpg?resize=1504x1128&vertical=center',
+    enabled: false
+  }
+];
 export default function Guest() {
   return (
     <DefaultLayout>
@@ -81,52 +104,43 @@ export default function Guest() {
         </div>
       </section>
 
-      {/* Templates Section */}
-      <section id="templates" className="py-8 md:py-12 bg-default-50">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className={subtitle({ class: "mb-2" })}>Our Templates</h2>
-           
-        </div>
-<br />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 max-w-6xl mx-auto">
-          {[
-            {
-              name: "Modern Minimalist",
-              description: "Clean and elegant design",
-              category: "All Professions"
-            },
-            {
-              name: "Creative Showcase",
-              description: "Perfect for designers",
-              category: "Creative Fields"
-            },
-            {
-              name: "Bold Professional",
-              description: "Strong executive presence",
-              category: "Business"
-            }
-          ].map((template, index) => (
-            <Card key={index} isPressable className="h-full">
-              <CardBody className="p-0">
-                <Image
-                  alt={template.name}
-                  className="object-cover"
-                  height={240}
-                  src={`https://source.unsplash.com/random/600x400/?portfolio,design${index}`}
-                  width="100%"
-                />
-              </CardBody>
-              <CardFooter className="flex-col items-start">
-                <h3 className="text-lg font-bold">{template.name}</h3>
-                <p className="text-default-500">{template.description}</p>
-                <p className="text-small text-default-400 mt-2">{template.category}</p>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-
-       
-      </section>
+{/* Templates Section */}
+<section id="templates" className="py-8 md:py-12 bg-default-50">
+  <div className="max-w-4xl mx-auto text-center">
+    <h2 className={subtitle({ class: "mb-2" })}>Our Templates</h2>
+    <p className={title({ size: "sm" })}>
+        Designs tailored for your profession
+    </p>
+  </div>
+  <br />
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 max-w-6xl mx-auto">
+    {templates.map((template) => (
+      <Card key={template.id} isPressable className="h-full">
+        <CardBody className="p-0">
+          <Image
+            alt={template.name}
+            className="object-cover"
+            height={240}
+            src={template.image}
+            width="100%"
+          />
+          {!template.enabled && (
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <span className="text-white font-bold text-lg">Coming Soon</span>
+            </div>
+          )}
+        </CardBody>
+        <CardFooter className="flex-col items-start">
+          <h3 className="text-lg font-bold">{template.name}</h3>
+          <p className="text-default-500">{template.description}</p>
+          <p className="text-small text-default-400 mt-2">
+            {template.enabled ? "Available Now" : "Coming Soon"}
+          </p>
+        </CardFooter>
+      </Card>
+    ))}
+  </div>
+</section>
 
       {/* CTA Section */}
       <section className="py-12 bg-gradient-to-r from-violet-500 to-fuchsia-500">
